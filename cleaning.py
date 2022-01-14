@@ -4,8 +4,19 @@ data = pd.read_excel("F:/GithubBITS/Msdhoni data/MS_Dhoni_ODI_record.xlsx")
 
 # Converting the date column to datetime format
 data["date"]=pd.to_datetime(data["date"])
+# Clean the dataset
+a=[]
+for i in range(0,len(data)):
+        if( data["fours"][i] =='-'):
+            data["fours"][i] = 0
+        if( data["sixes"][i] =='-'):
+            data["sixes"][i] = 0
+        if(data.score[i]=="DNB" or data.score[i]=="TDNB" or data.score[i]=="absent"):
+            a.append(i)
+data.drop(a,inplace=True)
+data.reset_index(drop=True, inplace=True)
+data.drop(labels="score",axis=1,inplace=True) #Remove the Unnamed column
 
-#  print(data.columns)
 
 # Only using number to represent odi_number
 for i in range(len(data)):
@@ -43,7 +54,7 @@ print(f"Runs:{ru}\nFours:{s4}\nSixes:{s6}")
 plt.pie(np.array([s4*4,s6*6,ru-s4*4-s6*6]),labels=["4s","6s","Runs w/o 4s and 6s"],normalize=True,explode = [0.1,0.2,0],autopct='%1.0f%%')
 plt.show()
 
-# Filtering data w.r.t Ground 
+# Filtering data w.r.t Ground
 ru=s4=s6=0
 gnd=str(input("Enter the ground name: "))
 for i in range(0, len(data)):
